@@ -7,6 +7,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { QueryExceptionFilter } from './common/filters/query-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -22,6 +23,26 @@ async function bootstrap() {
   app.useGlobalFilters(new QueryExceptionFilter());
 
   const port = configService.get('PORT');
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      exceptionFactory: (errors) => {
+        const result = errors.map((error) => ({
+          property: error.property,
+          value: error.value,
+          constraints: error.constraints,
+        }));
+
+        return new BadRequestException(result);
+      },
+    }),
+  );
 
   await app.listen(port);
 }
