@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from './context/products/products.module';
 import { validateEnvironment } from './config/env/env.validation';
 import { TypeOrmConfigService } from './config/database/typeorm.config';
+import { CategoriesModule } from './context/categories/categories.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TypeOrmConfigService } from './config/database/typeorm.config';
       useClass: TypeOrmConfigService,
     }),
     ProductsModule,
+    CategoriesModule,
   ],
   controllers: [],
   providers: [],
