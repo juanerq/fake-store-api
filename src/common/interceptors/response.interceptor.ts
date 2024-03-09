@@ -57,14 +57,19 @@ export class ResponseInterceptor<T>
 
     if (exception instanceof QueryFailedError) return exception;
 
-    const response: GenericResponseDto<HttpException> = {
-      result: exception,
+    const result =
+      exception instanceof HttpException ? exception.getResponse() : exception;
+
+    const response: GenericResponseDto<any> = {
+      result,
       status: false,
       path: request.url,
       statusCode: status,
       error: exception.name,
       message: exception.message,
     };
+
+    console.error(exception);
 
     reply.status(status).send(response);
   }
