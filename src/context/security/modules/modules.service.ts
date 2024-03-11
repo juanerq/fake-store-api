@@ -3,7 +3,7 @@ import { CreateModuleDto } from './dto/create-module.dto';
 import { UpdateModuleDto } from './dto/update-module.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Module } from './entities/module.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class ModulesService {
@@ -20,6 +20,31 @@ export class ModulesService {
 
   async findAll() {
     return await this.moduleRepository.find();
+  }
+
+  async findByIds(
+    ids: number[],
+    options: { validateList: boolean } = { validateList: false },
+  ) {
+    const { validateList } = options;
+
+    const modules = await this.moduleRepository.find({
+      where: { id: In(ids) },
+    });
+
+    if (validateList) {
+      if (modules.length != ids.length) {
+        const rolesNotfound = ids.filter(
+          (id) => !modules.some((rf) => id == rf.id),
+        );
+        if (rolesNotfound.length)
+          throw new NotFoundException(
+            `Modules with id ${rolesNotfound.join(', ')} not found`,
+          );
+      }
+    }
+
+    return modules;
   }
 
   async findOne(id: number) {

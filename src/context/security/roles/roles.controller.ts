@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
+  HttpCode,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
+import { AddPermissionListDto, UpdateRoleDto, CreateRoleDto } from './dto';
+import { RemovePermissionsRoleDto } from './dto/remove-permissions-role.dto';
 
 @Controller('roles')
 export class RolesController {
@@ -19,6 +21,14 @@ export class RolesController {
   @Post()
   create(@Body() createRoleDto: CreateRoleDto) {
     return this.rolesService.create(createRoleDto);
+  }
+
+  @Post('/permissions/:id')
+  addPermissionsList(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() addPermissionListDto: AddPermissionListDto,
+  ) {
+    return this.rolesService.addPermissionsList(id, addPermissionListDto);
   }
 
   @Get()
@@ -40,7 +50,17 @@ export class RolesController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.rolesService.remove(id);
+  }
+
+  @Delete('/permissions/:id')
+  @HttpCode(204)
+  removePermissions(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() removePermissionsRoleDto: RemovePermissionsRoleDto,
+  ) {
+    return this.rolesService.removePermission(id, removePermissionsRoleDto);
   }
 }

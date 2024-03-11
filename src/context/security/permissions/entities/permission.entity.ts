@@ -3,9 +3,11 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PermissionTypes } from '../enums/permission-types.enum';
+import { RolePermissions } from '../../roles/entities/role-permissions.entity';
 
 @Entity('permissions')
 export class Permission {
@@ -26,6 +28,12 @@ export class Permission {
     nullable: false,
   })
   type: PermissionTypes;
+
+  @OneToMany(
+    () => RolePermissions,
+    (rolePermissions) => rolePermissions.permission,
+  )
+  rolePermissions: RolePermissions;
 
   @BeforeInsert()
   checkNameToInsert() {

@@ -3,7 +3,7 @@ import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Permission } from './entities/permission.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { PermissionTypes } from './enums/permission-types.enum';
 
 @Injectable()
@@ -28,6 +28,31 @@ export class PermissionsService {
       throw new NotFoundException(`Permission with id ${id} not found`);
 
     return permission;
+  }
+
+  async findByIds(
+    ids: number[],
+    options: { validateList: boolean } = { validateList: false },
+  ) {
+    const { validateList } = options;
+
+    const permissions = await this.permissionRepository.find({
+      where: { id: In(ids) },
+    });
+
+    if (validateList) {
+      if (permissions.length != ids.length) {
+        const rolesNotfound = ids.filter(
+          (id) => !permissions.some((rf) => id == rf.id),
+        );
+        if (rolesNotfound.length)
+          throw new NotFoundException(
+            `Permissions with id ${rolesNotfound.join(', ')} not found`,
+          );
+      }
+    }
+
+    return permissions;
   }
 
   getPermissionTypes() {
