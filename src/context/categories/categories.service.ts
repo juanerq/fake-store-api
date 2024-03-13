@@ -4,12 +4,14 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { In, Repository } from 'typeorm';
+import { Utils } from 'src/utils/utils';
 
 @Injectable()
 export class CategoriesService {
   constructor(
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    private readonly utils: Utils,
   ) {}
 
   async create(createCategoryDto: CreateCategoryDto) {
@@ -21,13 +23,15 @@ export class CategoriesService {
     const categories = await this.categoryRepository.findBy({ id: In(ids) });
 
     if (categories.length != ids.length) {
-      const rolesNotfound = ids.filter(
-        (id) => !categories.some((rf) => id == rf.id),
-      );
-      if (rolesNotfound.length)
-        throw new NotFoundException(
-          `Category with id ${rolesNotfound.join(', ')} not found`,
-        );
+      this.utils.validateMissingRecordsById({
+        records: categories,
+        ids,
+        notFoundException: true,
+        customErrorMessage: {
+          plural: 'Categories with ids (:id_list) not found',
+          singular: 'Category with id (:id_list) not found',
+        },
+      });
     }
 
     return categories;

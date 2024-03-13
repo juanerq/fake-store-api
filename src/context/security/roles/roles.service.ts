@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
 import { AddPermissionListDto, CreateRoleDto, UpdateRoleDto } from './dto';
 import { ModulesService } from '../modules/modules.service';
@@ -9,6 +9,7 @@ import { RolePermissions } from './entities';
 import Module from 'module';
 import { Permission } from '../permissions/entities/permission.entity';
 import { RemovePermissionsRoleDto } from './dto/remove-permissions-role.dto';
+import { Utils } from 'src/utils/utils';
 
 @Injectable()
 export class RolesService {
@@ -19,6 +20,7 @@ export class RolesService {
     private readonly rolePermissionsRepository: Repository<RolePermissions>,
     private readonly modulesServices: ModulesService,
     private readonly permissionsServices: PermissionsService,
+    private readonly utils: Utils,
   ) {}
 
   async create(createRoleDto: CreateRoleDto) {
@@ -28,6 +30,29 @@ export class RolesService {
 
   async findAll() {
     return await this.roleRepository.find();
+  }
+
+  async findByIds(
+    ids: number[],
+    options: { validateList: boolean } = { validateList: false },
+  ) {
+    const { validateList } = options;
+
+    const roles = await this.roleRepository.find({
+      where: { id: In(ids) },
+    });
+
+    this.utils.validateMissingRecordsById({
+      records: roles,
+      ids,
+      notFoundException: validateList,
+      customErrorMessage: {
+        plural: 'Roles with ids (:id_list) not found',
+        singular: 'Role with id (:id_list) not found',
+      },
+    });
+
+    return roles;
   }
 
   async findOneSimple(id: number) {

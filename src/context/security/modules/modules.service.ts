@@ -4,12 +4,14 @@ import { UpdateModuleDto } from './dto/update-module.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Module } from './entities/module.entity';
 import { In, Repository } from 'typeorm';
+import { Utils } from 'src/utils/utils';
 
 @Injectable()
 export class ModulesService {
   constructor(
     @InjectRepository(Module)
     private readonly moduleRepository: Repository<Module>,
+    private readonly utils: Utils,
   ) {}
 
   async create(createModuleDto: CreateModuleDto) {
@@ -32,17 +34,15 @@ export class ModulesService {
       where: { id: In(ids) },
     });
 
-    if (validateList) {
-      if (modules.length != ids.length) {
-        const rolesNotfound = ids.filter(
-          (id) => !modules.some((rf) => id == rf.id),
-        );
-        if (rolesNotfound.length)
-          throw new NotFoundException(
-            `Modules with id ${rolesNotfound.join(', ')} not found`,
-          );
-      }
-    }
+    this.utils.validateMissingRecordsById({
+      records: modules,
+      ids,
+      notFoundException: validateList,
+      customErrorMessage: {
+        plural: 'Modules with ids (:id_list) not found',
+        singular: 'Module with id (:id_list) not found',
+      },
+    });
 
     return modules;
   }

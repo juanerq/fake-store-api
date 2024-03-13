@@ -5,12 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Permission } from './entities/permission.entity';
 import { In, Repository } from 'typeorm';
 import { PermissionTypes } from './enums/permission-types.enum';
+import { Utils } from 'src/utils/utils';
 
 @Injectable()
 export class PermissionsService {
   constructor(
     @InjectRepository(Permission)
     private readonly permissionRepository: Repository<Permission>,
+    private readonly utils: Utils,
   ) {}
 
   async create(createPermissionDto: CreatePermissionDto) {
@@ -40,17 +42,15 @@ export class PermissionsService {
       where: { id: In(ids) },
     });
 
-    if (validateList) {
-      if (permissions.length != ids.length) {
-        const rolesNotfound = ids.filter(
-          (id) => !permissions.some((rf) => id == rf.id),
-        );
-        if (rolesNotfound.length)
-          throw new NotFoundException(
-            `Permissions with id ${rolesNotfound.join(', ')} not found`,
-          );
-      }
-    }
+    this.utils.validateMissingRecordsById({
+      records: permissions,
+      ids,
+      notFoundException: validateList,
+      customErrorMessage: {
+        plural: 'Permissions with ids (:id_list) not found',
+        singular: 'Permission with id (:id_list) not found',
+      },
+    });
 
     return permissions;
   }
