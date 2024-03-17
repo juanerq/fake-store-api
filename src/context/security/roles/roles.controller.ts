@@ -13,7 +13,9 @@ import {
 import { RolesService } from './roles.service';
 import { AddPermissionListDto, UpdateRoleDto, CreateRoleDto } from './dto';
 import { RemovePermissionsRoleDto } from './dto/remove-permissions-role.dto';
+import { Auth } from '../auth/decorators';
 
+@Auth({ moduleName: 'roles' })
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
