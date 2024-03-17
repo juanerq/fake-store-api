@@ -6,10 +6,11 @@ import { AddPermissionListDto, CreateRoleDto, UpdateRoleDto } from './dto';
 import { ModulesService } from '../modules/modules.service';
 import { PermissionsService } from '../permissions/permissions.service';
 import { RolePermissions } from './entities';
-import Module from 'module';
+import { Module } from '../modules/entities/module.entity';
 import { Permission } from '../permissions/entities/permission.entity';
 import { RemovePermissionsRoleDto } from './dto/remove-permissions-role.dto';
 import { Utils } from 'src/utils/utils';
+import { ModulePermissions } from './interfaces/module-permissions.interface';
 
 @Injectable()
 export class RolesService {
@@ -77,7 +78,7 @@ export class RolesService {
     await this.roleRepository.remove(role);
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<ModulePermissions> {
     const role = await this.roleRepository.findOne({
       where: { id },
       relations: {
@@ -114,7 +115,7 @@ export class RolesService {
         return [...ac, { module, permissions }];
       },
       [],
-    ) as Array<{ module: Module; permissions: Permission }>;
+    ) as Array<{ module: Module; permissions: Permission[] }>;
 
     return { role: roleData as Role, modulePermissions };
   }
