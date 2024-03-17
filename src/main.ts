@@ -9,6 +9,7 @@ import { QueryExceptionFilter } from './common/filters/query-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import fastifyCookie from '@fastify/cookie';
+import { swaggerConfig } from './config/swagger/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -48,6 +49,8 @@ async function bootstrap() {
       },
     }),
   );
+
+  swaggerConfig(app);
 
   await app.listen(port);
 }
