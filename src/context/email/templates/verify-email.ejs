@@ -1,0 +1,32 @@
+<body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+  <div style="text-align: center;">
+    <p>👋 ¡Hola <%= name %>!</p>
+    <p>
+      Gracias por registrarte en Fake Store. Estamos muy emocionados de tenerte a bordo. ⚡
+    </p>
+  
+    <p>Para comenzar a usar Fake Store, por favor confirma tu cuenta a continuación:</p>
+    <div style="margin: 25px 0">
+      <a style="
+          text-decoration: none; 
+          color: #fff; 
+          padding: 10px; 
+          background-color: #7000ee; 
+          font-weight: bold;
+          border-radius: 10px;" 
+        href="<%= confirmation_url %>"
+      >
+        Validar registro 🚀
+      </a>
+    </div>
+  
+    <p>
+      📌 Si tienes problemas al hacer clic en el botón de confirmar cuenta, copia y pega
+      la siguiente URL en tu navegador web.
+    </p>
+  
+    <a href="<%= confirmation_url %>">
+      <%= confirmation_url %>
+    </a>
+  </div>
+</body>
