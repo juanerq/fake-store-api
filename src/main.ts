@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { QueryExceptionFilter } from './common/filters/query-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import fastifyCookie from '@fastify/cookie';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -16,6 +17,10 @@ async function bootstrap() {
   );
 
   const configService = app.get(ConfigService);
+
+  await app.register(fastifyCookie as any, {
+    secret: configService.get('COOKIE_SECRET'),
+  });
 
   app.setGlobalPrefix('api');
 
