@@ -4,6 +4,11 @@
 /build
 /postgres
 
+# static
+*.jpeg
+*.png
+
+
 # env
 .env
 
