@@ -18,6 +18,7 @@ import {
   ReferenceObject,
   SchemaObject,
 } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
+import { User } from 'src/context/users/entities';
 
 type ResultType = 'string' | 'array';
 
@@ -66,9 +67,10 @@ export const ApiCreatedGenericResponse = <DataDto extends Type<unknown>>(
 
   return applyDecorators(
     ApiExtraModels(
+      User,
       Product,
-      RequestValidationResponseDto,
       Category,
+      RequestValidationResponseDto,
       LoginResponseDto,
       RefreshTokenRespponseDto,
     ),
