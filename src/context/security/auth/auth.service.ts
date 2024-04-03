@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
   forwardRef,
 } from '@nestjs/common';
-import { LoginUserDto } from './dto/login-user.dt';
+import { LoginUserDto } from './dto/login-user.dto';
 import { UsersService } from 'src/context/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { RolesService } from '../roles/roles.service';
@@ -15,6 +15,7 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { ValidateEmailDto } from './dto/validate-email.dto';
 import { ConfigService } from '@nestjs/config';
 import { TypedEventEmitter } from 'src/common/events/events-emitter/typed-event-emitter.class';
+import { LoginResponseDto } from 'src/common/dto/login-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +28,7 @@ export class AuthService {
     private readonly eventEmitter: TypedEventEmitter,
   ) {}
 
-  async login(loginUserDto: LoginUserDto) {
+  async login(loginUserDto: LoginUserDto): Promise<LoginResponseDto> {
     const { email, password } = loginUserDto;
 
     const user = await this.usersService.findUserAuth({ email });
@@ -118,7 +119,7 @@ export class AuthService {
   }
 
   private createRefreshToken(payload: JwtPayload) {
-    return this.jwtService.sign(payload, { expiresIn: '2m' });
+    return this.jwtService.sign(payload, { expiresIn: '7d' });
   }
 
   getConfirmUrlToken({ email }: { email: string }) {

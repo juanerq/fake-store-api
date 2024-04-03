@@ -9,14 +9,14 @@ import {
 
 export class LoginUserDto {
   @ApiProperty({
-    example: 'test@gmail.com',
+    example: 'test123@gmail.com',
     description: 'Correo del usuario',
   })
   @IsEmail()
   email: string;
 
   @ApiProperty({
-    example: 'Skjp3mDk@2dkl',
+    example: 'Test123',
     description: 'Contraseña del usuario',
     minLength: 6,
     maxLength: 50,
