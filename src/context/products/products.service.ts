@@ -64,13 +64,7 @@ export class ProductsService {
   }
 
   async findAll(filters: FiltersProductsDto): Promise<PageDto<Product>> {
-    const {
-      page,
-      pageSize,
-      orderBy = 'createdAt',
-      sortOrder,
-      ...where
-    } = filters;
+    const { page, pageSize, orderBy, sortOrder, ...where } = filters;
 
     const query = this.createWhereQuery(where);
 

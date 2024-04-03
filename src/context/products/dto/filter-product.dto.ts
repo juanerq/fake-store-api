@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsInt,
   IsOptional,
@@ -24,20 +25,39 @@ export class IsPriceMaxValid implements ValidatorConstraintInterface {
 }
 
 export class FiltersProductsDto extends GenericFilter {
+  @ApiProperty({
+    type: 'number',
+    required: false,
+  })
   @IsInt()
   @IsOptional()
   categoryId?: number;
 
+  @ApiProperty({
+    type: 'string',
+    minLength: 3,
+    required: false,
+  })
   @IsString()
   @MinLength(3)
   @IsOptional()
   title?: string;
 
+  @ApiProperty({
+    type: 'number',
+    minimum: 1,
+    required: false,
+  })
   @Min(1)
   @IsPositive()
   @IsOptional()
   priceMin?: number;
 
+  @ApiProperty({
+    type: 'number',
+    minimum: 1,
+    required: false,
+  })
   @Min(1)
   @IsPositive()
   @Validate(IsPriceMaxValid, {
