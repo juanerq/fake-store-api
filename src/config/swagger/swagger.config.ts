@@ -20,5 +20,5 @@ export function swaggerConfig(app: NestFastifyApplication) {
       operationsSorter: 'alpha',
     },
   };
-  SwaggerModule.setup('api', app, document, options);
+  SwaggerModule.setup('doc', app, document, options);
 }
