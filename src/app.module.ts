@@ -14,6 +14,7 @@ import { UtilsModule } from './utils/utils.module';
 import { AuthModule } from './context/security/auth/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { EmailModule } from './context/email/email.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { EmailModule } from './context/email/email.module';
       isGlobal: true,
       cache: true,
       validate: validateEnvironment,
+      expandVariables: true,
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
@@ -35,6 +37,7 @@ import { EmailModule } from './context/email/email.module';
     AuthModule,
     EmailModule,
     EventEmitterModule.forRoot(),
+    FilesModule,
   ],
   controllers: [],
   providers: [],

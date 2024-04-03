@@ -1,3 +1,5 @@
+import fastifyCookie from '@fastify/cookie';
+import multipart from '@fastify/multipart';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {
@@ -8,8 +10,10 @@ import { ConfigService } from '@nestjs/config';
 import { QueryExceptionFilter } from './common/filters/query-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import fastifyCookie from '@fastify/cookie';
 import { swaggerConfig } from './config/swagger/swagger.config';
+import fastifyStatic from '@fastify/static';
+import { join } from 'path';
+import { RequestValidationMessageDto } from './common/dto/request-validation-response.dto';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -23,7 +27,12 @@ async function bootstrap() {
     secret: configService.get('COOKIE_SECRET'),
   });
 
-  app.setGlobalPrefix('api');
+  app.register(multipart as any);
+  app.register(fastifyStatic as any, {
+    root: join(process.cwd(), configService.get('STATIC_DIR_PATH')),
+  });
+
+  app.setGlobalPrefix(configService.get('GLOBAL_PREFIX'));
 
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new QueryExceptionFilter());
@@ -39,13 +48,15 @@ async function bootstrap() {
         enableImplicitConversion: true,
       },
       exceptionFactory: (errors) => {
-        const result = errors.map((error) => ({
-          property: error.property,
-          value: error.value,
-          constraints: error.constraints,
-        }));
+        const exceptions = errors.map((error) => {
+          return new RequestValidationMessageDto({
+            property: error.property,
+            value: error.value,
+            constraints: error.constraints,
+          });
+        });
 
-        return new BadRequestException(result);
+        return new BadRequestException(exceptions);
       },
     }),
   );
