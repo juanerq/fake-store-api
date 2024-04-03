@@ -2,26 +2,38 @@ import { HttpStatus } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class GenericResponseDto<T> {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'true = success / false = error',
+  })
   status: boolean;
 
   @ApiProperty({
-    examples: [400, 401, 500],
+    examples: [200, 201, 400, 401, 500],
   })
   statusCode: HttpStatus;
 
   @ApiProperty({
-    description: 'Tipo de error',
-    examples: ['Bad Request', 'Internal Server Error', 'Unauthorized'],
+    example: 'Error details',
+    examples: [
+      'Bad Request',
+      'Internal Server Error',
+      'Unauthorized',
+      'QueryFailedError',
+    ],
+    required: false,
   })
   error?: string;
 
   @ApiProperty({
+    required: false,
+    example: 'Error or success message',
     examples: ['Record with 1 not found', 'Record already exists'],
   })
   message?: string | string[];
 
-  @ApiProperty()
+  @ApiProperty({
+    example: '/api/products',
+  })
   path: string;
 
   result: T;

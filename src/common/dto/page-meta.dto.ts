@@ -7,21 +7,43 @@ interface PageMetaDtoParameters {
 }
 
 export class PageMetaDto {
-  @ApiProperty()
+  @ApiProperty({
+    type: 'number',
+    example: 1,
+  })
   readonly page: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: 'number',
+    example: 10,
+  })
   readonly pageSize: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: 'number',
+    example: 16,
+    description: 'Number of records found',
+  })
   readonly itemCount: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: 'number',
+    example: '2',
+    description: 'Number of pages',
+  })
   readonly pageCount: number;
 
+  @ApiProperty({
+    type: 'boolean',
+    example: false,
+  })
   @ApiProperty()
   readonly hasPreviousPage: boolean;
 
+  @ApiProperty({
+    type: 'boolean',
+    example: true,
+  })
   @ApiProperty()
   readonly hasNextPage: boolean;
 
