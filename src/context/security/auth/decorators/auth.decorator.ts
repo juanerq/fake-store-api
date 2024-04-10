@@ -7,6 +7,6 @@ import { ValidModule } from '../interfaces';
 export function Auth(args?: ValidModule) {
   return applyDecorators(
     RoleProtected(args),
-    UseGuards(AuthGuard(), UserRoleGuard),
+    UseGuards(AuthGuard('jwt'), UserRoleGuard),
   );
 }
