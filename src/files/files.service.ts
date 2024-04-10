@@ -13,6 +13,7 @@ import { v4 as uuid } from 'uuid';
 // Types
 import { DestinationDirectories } from './enums/destination-dirs.enum';
 import { FileUploadOptions } from './interfaces/file-upload-options.interface';
+import { FilesUploadResponseDto } from './dto/files-upload-response.dto';
 
 @Injectable()
 export class FilesService {
@@ -24,7 +25,7 @@ export class FilesService {
     this.staticDirPath = configService.get('STATIC_DIR_PATH');
   }
 
-  getStaticImage(
+  getFilePath(
     imageName: string,
     options: FileUploadOptions = {
       destination: this.defaultFileDir,
@@ -38,7 +39,7 @@ export class FilesService {
     const path = join(process.cwd(), rootDir, pathFromRoot);
 
     if (!fs.existsSync(path))
-      throw new BadRequestException(`No product found with image ${imageName}`);
+      throw new NotFoundException(`file with name ${imageName} not found`);
 
     return {
       path,
@@ -57,7 +58,7 @@ export class FilesService {
   async uploadFiles(
     multiPart: AsyncIterableIterator<MultipartFile>,
     options?: FileUploadOptions,
-  ) {
+  ): Promise<FilesUploadResponseDto> {
     const { destination = this.defaultFileDir, rootDir = this.staticDirPath } =
       options ?? {};
 
@@ -88,6 +89,10 @@ export class FilesService {
 
           secureUrls.push(secureUrl);
         }
+      }
+
+      if (!secureUrls.length) {
+        throw new BadRequestException(`No file received`);
       }
 
       return { secureUrls };

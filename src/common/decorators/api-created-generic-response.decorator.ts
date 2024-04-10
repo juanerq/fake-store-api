@@ -27,6 +27,7 @@ import { Product } from 'src/context/products/entities/product.entity';
 import { Category } from 'src/context/categories/entities/category.entity';
 import { Permission } from 'src/context/security/permissions/entities/permission.entity';
 import { Module } from 'src/context/security/modules/entities/module.entity';
+import { FilesUploadResponseDto } from 'src/files/dto/files-upload-response.dto';
 
 // Types
 type ResultType = 'string' | 'array' | 'any';
@@ -86,6 +87,7 @@ export const ApiCreatedGenericResponse = <DataDto extends Type<unknown>>(
       RequestValidationResponseDto,
       LoginResponseDto,
       RefreshTokenRespponseDto,
+      FilesUploadResponseDto,
     ),
     ApiResponse(response),
   );
