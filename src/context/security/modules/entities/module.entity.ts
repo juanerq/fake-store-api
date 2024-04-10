@@ -7,12 +7,22 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RolePermissions } from '../../roles/entities/role-permissions.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('modules')
 export class Module {
+  @ApiProperty({
+    uniqueItems: true,
+    example: 1,
+  })
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({
+    uniqueItems: true,
+    required: true,
+    example: 'products',
+  })
   @Column({
     type: 'varchar',
     unique: true,
@@ -20,6 +30,11 @@ export class Module {
   })
   name: string;
 
+  @ApiProperty({
+    uniqueItems: true,
+    required: false,
+    example: 'products',
+  })
   @Column({
     type: 'varchar',
     unique: true,
