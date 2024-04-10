@@ -43,7 +43,7 @@ export class UsersController {
   @ApiCreatedGenericResponse({
     dataDto: User,
     status: HttpStatus.CREATED,
-    description: 'Successfully created product',
+    description: 'Successfully created user',
   })
   @ApiConflictResponse({
     description: 'Record already exists',
@@ -95,10 +95,10 @@ export class UsersController {
   }
 
   @ApiNoContentResponse({
-    description: 'Removed product',
+    description: 'Removed user',
   })
   @ApiNotFoundResponse({
-    description: 'Product not found',
+    description: 'User not found',
     type: GenericResponseDto,
   })
   @Delete(':id')
