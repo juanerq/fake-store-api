@@ -6,21 +6,30 @@ import {
   ApiResponseOptions,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { Product } from 'src/context/products/entities/product.entity';
-import { GenericResponseDto } from '../dto';
-import { RequestValidationResponseDto } from '../dto/request-validation-response.dto';
-import { Category } from 'src/context/categories/entities/category.entity';
-import {
-  LoginResponseDto,
-  RefreshTokenRespponseDto,
-} from '../dto/login-response.dto';
+
+// Interface
 import {
   ReferenceObject,
   SchemaObject,
 } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
-import { User } from 'src/context/users/entities';
 
-type ResultType = 'string' | 'array';
+// Dto
+import { GenericResponseDto } from '../dto';
+import { RequestValidationResponseDto } from '../dto/request-validation-response.dto';
+import {
+  LoginResponseDto,
+  RefreshTokenRespponseDto,
+} from '../dto/login-response.dto';
+
+// Entities
+import { User } from 'src/context/users/entities';
+import { Product } from 'src/context/products/entities/product.entity';
+import { Category } from 'src/context/categories/entities/category.entity';
+import { Permission } from 'src/context/security/permissions/entities/permission.entity';
+import { Module } from 'src/context/security/modules/entities/module.entity';
+
+// Types
+type ResultType = 'string' | 'array' | 'any';
 
 type ApiCreatedGenericResponseType<DataDto> = {
   dataDto: DataDto;
@@ -41,13 +50,15 @@ export const ApiCreatedGenericResponse = <DataDto extends Type<unknown>>(
         },
       },
     };
-  } else if (params.resultType === 'string') {
+  } else if (['any', 'string'].includes(params.resultType)) {
     properties = {
       result: {
         example: params.dataDto,
-        type: params.resultType,
       },
     };
+
+    if (params.resultType !== 'any')
+      properties.result['type'] = params.resultType;
   } else {
     properties = {
       result: {
@@ -70,6 +81,8 @@ export const ApiCreatedGenericResponse = <DataDto extends Type<unknown>>(
       User,
       Product,
       Category,
+      Permission,
+      Module,
       RequestValidationResponseDto,
       LoginResponseDto,
       RefreshTokenRespponseDto,
