@@ -10,7 +10,7 @@ import { Module } from '../modules/entities/module.entity';
 import { Permission } from '../permissions/entities/permission.entity';
 import { RemovePermissionsRoleDto } from './dto/remove-permissions-role.dto';
 import { Utils } from 'src/utils/utils';
-import { ModulePermissions } from './interfaces/module-permissions.interface';
+import { ModulePermissions } from './dto/module-permissions.dto';
 
 @Injectable()
 export class RolesService {

@@ -28,6 +28,8 @@ import { Category } from 'src/context/categories/entities/category.entity';
 import { Permission } from 'src/context/security/permissions/entities/permission.entity';
 import { Module } from 'src/context/security/modules/entities/module.entity';
 import { FilesUploadResponseDto } from 'src/files/dto/files-upload-response.dto';
+import { ModulePermissions } from 'src/context/security/roles/dto';
+import { RolePermissions } from 'src/context/security/roles/entities';
 
 // Types
 type ResultType = 'string' | 'array' | 'any';
@@ -84,10 +86,12 @@ export const ApiCreatedGenericResponse = <DataDto extends Type<unknown>>(
       Category,
       Permission,
       Module,
+      RolePermissions,
       RequestValidationResponseDto,
       LoginResponseDto,
       RefreshTokenRespponseDto,
       FilesUploadResponseDto,
+      ModulePermissions,
     ),
     ApiResponse(response),
   );
