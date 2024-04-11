@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { META_ROLES } from '../decorators';
 import { ValidModule } from '../interfaces';
 import { User } from 'src/context/users/entities';
-import { ModulePermissions } from '../../roles/interfaces/module-permissions.interface';
+import { ModulePermissions } from '../../roles/dto/module-permissions.dto';
 import { PermissionTypes } from '../../permissions/enums/permission-types.enum';
 
 @Injectable()

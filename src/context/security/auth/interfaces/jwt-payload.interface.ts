@@ -1,4 +1,4 @@
-import { ModulePermissions } from '../../roles/interfaces/module-permissions.interface';
+import { ModulePermissions } from '../../roles/dto/module-permissions.dto';
 
 export interface JwtPayload {
   id: number;

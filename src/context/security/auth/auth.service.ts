@@ -9,13 +9,13 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { UsersService } from 'src/context/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { RolesService } from '../roles/roles.service';
-import { ModulePermissions } from '../roles/interfaces/module-permissions.interface';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { ValidateEmailDto } from './dto/validate-email.dto';
 import { ConfigService } from '@nestjs/config';
 import { TypedEventEmitter } from 'src/common/events/events-emitter/typed-event-emitter.class';
 import { LoginResponseDto } from 'src/common/dto/login-response.dto';
+import { ModulePermissions } from '../roles/dto';
 
 @Injectable()
 export class AuthService {
