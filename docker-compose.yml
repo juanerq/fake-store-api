@@ -1,6 +1,47 @@
-version: '3'
-
 services:
+  service-prod:
+    container_name: service-prod
+    depends_on:
+      - db
+    env_file: .env
+    build:
+      target: prod
+      context: .
+      args:
+        - PORT=${PORT}
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./${STATIC_DIR_PATH}:/app/${STATIC_DIR_PATH}
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "512m"
+        reservations:
+          cpus: "0.25"
+          memory: "256m"
+    networks:
+      - network-service
+
+  service-dev:
+    container_name: service-dev
+    depends_on:
+      - db
+    env_file: .env
+    build:
+      target: dev
+      context: .
+      args:
+        - PORT=${PORT}
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./src:/app/src
+      - ./${STATIC_DIR_PATH}:/app/${STATIC_DIR_PATH}
+    networks:
+      - network-service
+
   db:
     image: postgres:15.3
     container_name: db
@@ -12,4 +53,10 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - ./postgres:/var/lib/postgres/data
+    networks:
+      - network-service
 
+
+networks:
+  network-service:
+    external: true
