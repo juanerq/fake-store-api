@@ -62,9 +62,10 @@ export class UserRoleGuard implements CanActivate {
 
     for (const role of rolePermissions) {
       for (const { module, permissions } of role.modulePermissions) {
+        const moduleDetail = module.detail.toUpperCase();
         if (
-          module.detail === moduleName ||
-          module.detail === PermissionTypes.ALL.toLowerCase()
+          moduleDetail === moduleName.toUpperCase() ||
+          moduleDetail.toUpperCase() === PermissionTypes.ALL.toUpperCase()
         ) {
           for (const permission of permissions) {
             if (
